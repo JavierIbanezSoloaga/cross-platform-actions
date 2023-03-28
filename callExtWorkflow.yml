@@ -1,0 +1,12 @@
+name: 'Call external workflow'
+description: 'Call a external workflow and give it an ID'
+inputs:
+  who-to-call:  # id of input
+    description: 'Workflow to call'
+    required: true
+  token: 
+    description: 'Access token required to call the workflow'
+    required: true
+runs:
+  using: 'node16'
+  main: 'callExtWorkflow.js'
