@@ -1,3 +1,4 @@
+import { Octokit } from 'octokit';
 const core = require('@actions/core')
 
 try {
@@ -7,6 +8,23 @@ try {
 
     const token = core.getInput('token')
     console.log("Token: " + token)
+
+    const octokit = new Octokit({
+        auth: token
+    })
+    
+    const id = 1234
+    await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+        owner: 'JavierIbanezSoloaga',
+        repo: whoToCall,
+        workflow_id: 'printID.yml',
+        inputs: {
+            id: id
+        },
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    })
 
 
 
