@@ -18,6 +18,7 @@ try {
         owner: 'JavierIbanezSoloaga',
         repo: whoToCall,
         workflow_id: 'printID.yml',
+        ref: 'main',
         inputs: {
             id: id
         },
