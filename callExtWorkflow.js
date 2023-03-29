@@ -13,7 +13,7 @@ try {
         auth: token
     })
     
-    const id = 1234
+    const id = '1234'
     await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
         owner: 'JavierIbanezSoloaga',
         repo: whoToCall,
