@@ -1,5 +1,5 @@
 import { Octokit } from 'octokit';
-import  { core } from '@actions/core'
+import * as core from '@actions/core'
 
 try {
     // `who-to-call` input defined in action metadata file
