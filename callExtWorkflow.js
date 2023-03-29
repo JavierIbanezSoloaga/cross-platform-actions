@@ -1,5 +1,5 @@
 import { Octokit } from 'octokit';
-const core = require('@actions/core')
+import  { core } from '@actions/core'
 
 try {
     // `who-to-call` input defined in action metadata file
