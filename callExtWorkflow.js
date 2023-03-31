@@ -47,10 +47,11 @@ try {
 
         if(response.data.total_count > 0){
             for(let run of response.data.workflow_runs){
-                console.log(run, run['jobs_url'])
-                // let jobs = await octokit.request('GET {jobs_url}', {
-                //     jobs_url: run['jobs_url']
-                // })
+                let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
+                    owner: 'JavierIbanezSoloaga',
+                    repo: whoToCall,
+                    id: run['id']
+                })
                 
                 console.log(jobs)
             }
