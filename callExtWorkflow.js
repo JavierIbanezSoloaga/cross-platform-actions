@@ -9,7 +9,7 @@ try {
     const token = core.getInput('token')
     //console.log("Token: " + token)
 
-    const run_date_filter = new Date().toLocaleDateString()
+    const run_date_filter = new Date().toJSON()
     console.log(run_date_filter)
 
     const octokit = new Octokit({
@@ -33,7 +33,7 @@ try {
     let workflowID = ""
 
     //while(workflowID === ""){
-    let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created=2023-03-30..2023-03-31', {
+    let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created=%3E{run_date_filter}', {
         owner: 'JavierIbanezSoloaga',
         repo: whoToCall,
         run_date_filter: run_date_filter,
