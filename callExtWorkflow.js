@@ -9,7 +9,7 @@ try {
     const token = core.getInput('token')
     //console.log("Token: " + token)
 
-    const run_date_filter = new Date().toJSON().slice(0,16)
+    const run_date_filter = new Date().toJSON().slice(0, 16)
     console.log(run_date_filter)
 
     const octokit = new Octokit({
@@ -32,19 +32,29 @@ try {
 
     let workflowID = ""
 
-    //while(workflowID === ""){
-    let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
-        owner: 'JavierIbanezSoloaga',
-        repo: whoToCall,
-        run_date_filter: run_date_filter,
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
+    // while (workflowID === "") {
+        let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
+            owner: 'JavierIbanezSoloaga',
+            repo: whoToCall,
+            run_date_filter: run_date_filter,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+
+        })
+
+        console.log(response.total_count)
+
+        if(response.total_count > 0){
+            for(run in response.workflow_runs){
+                let jobs = await octokit.request('GET {jobs_url}', {
+                    jobs_url: run['jobs_url']
+                })
+                
+                console.log(jobs)
+            }
         }
-
-    })
-
-    console.log(response)
-    //}
+    // }
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
