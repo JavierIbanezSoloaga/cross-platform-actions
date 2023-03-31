@@ -47,8 +47,9 @@ try {
         if (runs.length > 0) {
             console.log("hay runs")
             console.log(runs)
+            
+            let targetJob = null
             if (runs.every(run => run.status === "completed")) {
-                let targetJob = null
 
                 while (targetJob === null) {
                     for (let run of runs) {
