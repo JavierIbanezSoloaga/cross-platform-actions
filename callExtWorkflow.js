@@ -43,10 +43,10 @@ try {
 
         })
 
-        console.log(response.total_count)
+        console.log(response.data.total_count)
 
-        if(response.total_count > 0){
-            for(run in response.workflow_runs){
+        if(response.data.total_count > 0){
+            for(run in response.data.workflow_runs){
                 let jobs = await octokit.request('GET {jobs_url}', {
                     jobs_url: run['jobs_url']
                 })
