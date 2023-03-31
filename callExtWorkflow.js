@@ -43,18 +43,18 @@ try {
 
         })
         console.log("here is a try")
-        if (response.data.total_count > 0) {
+        let runs = response.data.workflow_runs.filter(r => r.name !== "Run Deploy Action")
+        if (runs.length > 0) {
             runsFetched = true
             console.log("hay runs")
             let targetJob = null
             while (targetJob === null) {
-                for (let run of response.data.workflow_runs) {
+                for (let run of runs) {
                     let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
                         owner: 'JavierIbanezSoloaga',
                         repo: whoToCall,
                         id: run['id']
                     })
-                    console.log(jobs)
                     if (jobs.data.jobs.every(job => job.steps.every(step => step.status === "completed"))) {
                         console.log("Estan completos")
                         targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
