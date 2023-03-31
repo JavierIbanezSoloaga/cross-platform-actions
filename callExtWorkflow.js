@@ -31,8 +31,8 @@ try {
     })
 
     let workflowID = ""
-    let runsFetched = false
-    while (!runsFetched) {
+    let jobFound = false
+    while (!jobFound) {
         let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
             owner: 'JavierIbanezSoloaga',
             repo: whoToCall,
@@ -45,8 +45,8 @@ try {
         console.log("here is a try")
         let runs = response.data.workflow_runs.filter(r => r.name !== "Run Deploy Action")
         if (runs.length > 0) {
-            runsFetched = true
             console.log("hay runs")
+            console.log(runs)
             let targetJob = null
             while (targetJob === null) {
                 for (let run of runs) {
@@ -64,8 +64,9 @@ try {
                     }
                 }
             }
-            console.log(targetJob)
-        }else{
+            jobFound = !(targetJob === undefined)
+        }
+        if(!jobFound){
             await new Promise(r => setTimeout(r, 3000));
         }
     }
