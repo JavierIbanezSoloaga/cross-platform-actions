@@ -44,7 +44,7 @@ try {
 
     })
 
-    console-log(response)
+    console.log(response)
     //}
 
     // TODO: wait for the workflow to end and recover the output
