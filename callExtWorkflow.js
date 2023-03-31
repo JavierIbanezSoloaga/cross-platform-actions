@@ -9,7 +9,7 @@ try {
     const token = core.getInput('token')
     //console.log("Token: " + token)
 
-    const run_date_filter = new Date().toJSON()
+    const run_date_filter = new Date().toJSON().slice(0,16)
     console.log(run_date_filter)
 
     const octokit = new Octokit({
