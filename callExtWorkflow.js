@@ -47,7 +47,7 @@ try {
         if (runs.length > 0) {
             console.log("hay runs")
             console.log(runs)
-            
+
             let targetJob = null
             if (runs.every(run => run.status === "completed")) {
 
@@ -69,7 +69,7 @@ try {
                 }
             }
             console.log(targetJob)
-            jobFound = targetJob !== (undefined | null)
+            jobFound = !(targetJob === undefined | null)
         }
         if (!jobFound) {
             await new Promise(r => setTimeout(r, 3000));
