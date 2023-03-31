@@ -52,9 +52,9 @@ try {
             console.log("hay runs")
 
             let targetJob = null
+            let completedRuns = runs.filter(run => run.status === "completed")
 
-            while (targetJob === null) {
-                let completedRuns = runs.filter( run => run.status === "completed")
+            while (targetJob === null && completedRuns.length > 0) {
                 for (let run of completedRuns) {
                     let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
                         owner: 'JavierIbanezSoloaga',
