@@ -47,27 +47,30 @@ try {
         if (runs.length > 0) {
             console.log("hay runs")
             console.log(runs)
-            let targetJob = null
-            while (targetJob === null) {
-                for (let run of runs) {
-                    let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
-                        owner: 'JavierIbanezSoloaga',
-                        repo: whoToCall,
-                        id: run['id']
-                    })
-                    if (jobs.data.jobs.every(job => job.status === "completed")) {
-                        console.log("Estan completos")
-                        targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
-                        console.log(jobs.data.jobs)
-                    }else{
-                        await new Promise(r => setTimeout(r, 3000));
+            if (runs.every(run => run.status === "completed")) {
+                let targetJob = null
+
+                while (targetJob === null) {
+                    for (let run of runs) {
+                        let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
+                            owner: 'JavierIbanezSoloaga',
+                            repo: whoToCall,
+                            id: run['id']
+                        })
+                        if (jobs.data.jobs.every(job => job.status === "completed")) {
+                            console.log("Estan completos")
+                            targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
+                            console.log(jobs.data.jobs)
+                        } else {
+                            await new Promise(r => setTimeout(r, 3000));
+                        }
                     }
                 }
             }
             console.log(targetJob)
-            jobFound = !(targetJob === undefined)
+            jobFound = targetJob !== (undefined | null)
         }
-        if(!jobFound){
+        if (!jobFound) {
             await new Promise(r => setTimeout(r, 3000));
         }
     }
