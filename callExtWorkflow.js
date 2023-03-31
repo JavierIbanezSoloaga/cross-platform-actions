@@ -53,7 +53,7 @@ try {
                     id: run['id']
                 })
                 
-                console.log(jobs)
+                console.log(jobs.data.jobs)
             }
         }
     // }
