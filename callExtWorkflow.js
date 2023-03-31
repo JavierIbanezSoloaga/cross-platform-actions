@@ -69,8 +69,7 @@ try {
                 }
             }
             console.log(targetJob)
-            jobFound = !(targetJob === undefined | null)
-            console.log(jobFound)
+            jobFound = !(targetJob === (undefined | null))
         }
         if (!jobFound) {
             await new Promise(r => setTimeout(r, 3000));
