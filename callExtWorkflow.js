@@ -64,6 +64,7 @@ try {
                     }
                 }
             }
+            console.log(targetJob)
             jobFound = !(targetJob === undefined)
         }
         if(!jobFound){
