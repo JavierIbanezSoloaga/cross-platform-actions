@@ -55,7 +55,7 @@ try {
                         repo: whoToCall,
                         id: run['id']
                     })
-                    if (jobs.data.jobs.every(job => job.steps.every(step => step.status === "completed"))) {
+                    if (jobs.data.jobs.every(job => job.status === "completed")) {
                         console.log("Estan completos")
                         targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
                         console.log(jobs.data.jobs)
