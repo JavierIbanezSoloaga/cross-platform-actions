@@ -33,31 +33,32 @@ try {
     let workflowID = ""
 
     // while (workflowID === "") {
-        let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
-            owner: 'JavierIbanezSoloaga',
-            repo: whoToCall,
-            run_date_filter: run_date_filter,
-            headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-            }
+    let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
+        owner: 'JavierIbanezSoloaga',
+        repo: whoToCall,
+        run_date_filter: run_date_filter,
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
 
-        })
+    })
 
-        console.log(response.data.total_count)
-
-        if(response.data.total_count > 0){
-            for(let run of response.data.workflow_runs){
+    if (response.data.total_count > 0) {
+        let targetJob = null
+        while (targetJob === null) {
+            for (let run of response.data.workflow_runs) {
                 let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
                     owner: 'JavierIbanezSoloaga',
                     repo: whoToCall,
                     id: run['id']
                 })
-                
-                for(let job of jobs.data.jobs){
-                    console.log(job.steps)
+                if (jobs.data.jobs.every(job => job.steps.every(step => step.status === "completed"))) {
+                    targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
                 }
             }
         }
+        console.log(targetJob)
+    }
     // }
 
     // TODO: wait for the workflow to end and recover the output
