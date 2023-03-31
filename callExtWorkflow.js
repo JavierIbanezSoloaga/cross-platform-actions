@@ -53,7 +53,9 @@ try {
                     id: run['id']
                 })
                 
-                console.log(jobs.data.jobs.steps)
+                for(let job of jobs.data.jobs){
+                    console.log(job.steps)
+                }
             }
         }
     // }
