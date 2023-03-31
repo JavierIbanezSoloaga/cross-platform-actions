@@ -57,7 +57,8 @@ try {
                     })
                     if (jobs.data.jobs.every(job => job.steps.every(step => step.status === "completed"))) {
                         console.log("Estan completos")
-                        targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name == id))
+                        targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
+                        console.log(jobs.data.jobs)
                     }else{
                         await new Promise(r => setTimeout(r, 3000));
                     }
