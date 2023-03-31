@@ -33,10 +33,9 @@ try {
     let workflowID = ""
 
     //while(workflowID === ""){
-    let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created=%3E{run_date_filter}', {
+    let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created=2023-03-30..2023-03-31', {
         owner: 'JavierIbanezSoloaga',
         repo: whoToCall,
-        ref: 'main',
         run_date_filter: run_date_filter,
         headers: {
             'X-GitHub-Api-Version': '2022-11-28'
