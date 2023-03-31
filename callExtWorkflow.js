@@ -32,7 +32,7 @@ try {
 
     let workflowID = ""
     let runsFetched = false
-    while (runsFetched) {
+    while (!runsFetched) {
         let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
             owner: 'JavierIbanezSoloaga',
             repo: whoToCall,
@@ -42,7 +42,7 @@ try {
             }
 
         })
-
+        console.log("here is a try")
         if (response.data.total_count > 0) {
             runsFetched = true
             console.log("hay runs")
