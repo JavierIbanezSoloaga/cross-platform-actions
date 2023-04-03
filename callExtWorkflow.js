@@ -11,7 +11,6 @@ try {
     console.log("Calling " + whoToCall);
 
     const token = core.getInput('token')
-    //console.log("Token: " + token)
 
     const run_date_filter = new Date().toJSON().slice(0, 16)
     console.log(run_date_filter)
@@ -19,7 +18,7 @@ try {
     const octokit = new Octokit({
         auth: token
     })
-
+    // TODO: Generate a random ID
     const id = '1234'
     await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
         owner: 'JavierIbanezSoloaga',
@@ -47,7 +46,7 @@ try {
 
         })
         console.log("here is a try")
-        let runs = response.data.workflow_runs.filter(r => r.name !== "Run Deploy Action")
+        let runs = response.data.workflow_runs
         if (runs.length > 0) {
             console.log("hay runs")
 
@@ -65,8 +64,10 @@ try {
                         console.log("Estan completos")
                         console.log(jobs.data.jobs)
                         targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
+                        // If the target job is found go outside the loop 
                         if (targetJob !== undefined) break
                     } else {
+                        console.log("Oh existen las runs completed y los jobs no")
                         await sleep(sleepTime)
                     }
                 }
