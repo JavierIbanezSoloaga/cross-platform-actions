@@ -34,8 +34,8 @@ try {
     })
 
     const sleepTime = 3000
-    let jobFound = false
-    while (!jobFound) {
+    let targetJob = null
+    while (targetJob === undefined || targetJob === null) {
         let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
             owner: 'JavierIbanezSoloaga',
             repo: whoToCall,
@@ -46,37 +46,25 @@ try {
 
         })
         console.log("here is a try")
-        let runs = response.data.workflow_runs
+        let runs = response.data.workflow_runs.filter(run => run.status === "completed")
         if (runs.length > 0) {
             console.log("hay runs")
 
-            let targetJob = null
-            let completedRuns = runs.filter(run => run.status === "completed")
-
-            while (targetJob === null && completedRuns.length > 0) {
-                for (let run of completedRuns) {
-                    let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
-                        owner: 'JavierIbanezSoloaga',
-                        repo: whoToCall,
-                        id: run['id']
-                    })
-                    if (jobs.data.jobs.every(job => job.status === "completed")) {
-                        console.log("Estan completos")
-                        console.log(jobs.data.jobs)
-                        targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
-                        // If the target job is found go outside the loop 
-                        if (targetJob !== undefined) break
-                    } else {
-                        console.log("Oh existen las runs completed y los jobs no")
-                        await sleep(sleepTime)
-                    }
-                }
+            for (let run of runs) {
+                let jobs = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{id}/jobs', {
+                    owner: 'JavierIbanezSoloaga',
+                    repo: whoToCall,
+                    id: run['id']
+                })
+                console.log(jobs.data.jobs)
+                targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
+                // If the target job is found go outside the loop 
+                if (targetJob !== undefined) break
             }
 
             console.log(targetJob)
-            jobFound = !(targetJob === undefined | targetJob === null)
         }
-        if (!jobFound) {
+        if (targetJob === undefined || targetJob === null) {
             await sleep(sleepTime)
         }
     }
