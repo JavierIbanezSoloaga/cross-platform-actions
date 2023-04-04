@@ -21,6 +21,7 @@ try {
 
     // Format YYYY-MM-DDTHH:MM
     const run_date_filter = new Date().toJSON().slice(0, 16)
+    console.log(run_date_filter)
 
     const octokit = new Octokit({
         auth: token
