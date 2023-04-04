@@ -62,6 +62,7 @@ try {
                 // If the target job is found go outside the loop 
                 if (targetJob !== undefined) break
             }
+            console.log(targetJob)
         }
         if (targetJob === undefined || targetJob === null) {
             await sleep(SLEEP_DELAY)
