@@ -69,6 +69,21 @@ try {
     }
     console.log(targetJob)
 
+    let artifacts = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts', {
+        owner: owner,
+        repo: whoToCall,
+        run_id: targetJob['run_id']
+    })
+
+    let targetArtifact = artifacts.data.find(artifact => artifact.name === "example-artifact")
+    let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
+        owner: owner,
+        repo: whoToCall,
+        artifact_id: targetArtifact['id']
+    })
+    console.log(artifactFiles)
+
+
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
     core.setFailed(error.message);
