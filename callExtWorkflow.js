@@ -83,7 +83,7 @@ try {
     })
     console.log(artifactFiles)
 
-    core.setOutput("deploy-artifact", artifactFiles.data)
+    core.setOutput("deploy-artifact", targetArtifact['name'])
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
