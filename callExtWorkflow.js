@@ -83,7 +83,7 @@ try {
     })
     console.log(artifactFiles)
 
-    core.setOutput("deploy-artifact", targetArtifact['name'])
+    core.setOutput("deploy-artifact", targetArtifact['archive_download_url'])
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
