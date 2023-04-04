@@ -7,6 +7,9 @@ inputs:
   token: 
     description: 'Access token required to call the workflow'
     required: true
+outputs:
+  deploy-artifact:
+    description: 'Artifact of deployment'
 runs:
   using: 'node16'
   main: 'callExtWorkflow.js'

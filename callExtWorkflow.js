@@ -83,6 +83,7 @@ try {
     })
     console.log(artifactFiles)
 
+    core.setOutput("artifact", artifactFiles.data)
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
