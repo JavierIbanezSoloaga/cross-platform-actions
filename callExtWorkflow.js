@@ -75,7 +75,7 @@ try {
         run_id: targetJob['run_id']
     })
 
-    let targetArtifact = artifacts.data.find(artifact => artifact.name === "example-artifact")
+    let targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
     let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
         owner: owner,
         repo: whoToCall,
