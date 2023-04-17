@@ -85,7 +85,8 @@ try {
     })
     console.log(artifactFiles)
 
-    core.setOutput("deploy-artifact", artifactFiles)
+    const artifact = File.write("artifact.zip", artifactFiles)
+    core.setOutput("deploy-artifact", artifact)
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
