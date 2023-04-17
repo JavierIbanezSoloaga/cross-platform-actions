@@ -85,7 +85,7 @@ try {
     })
     console.log(artifactFiles)
 
-    core.setOutput("deploy-artifact", {name: `$whoToCall -artifact`, zip: artifactFiles.data})
+    core.setOutput("deploy-artifact", {name: `${whoToCall}-artifact`, zip: artifactFiles.data})
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
