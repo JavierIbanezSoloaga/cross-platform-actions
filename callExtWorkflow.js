@@ -85,9 +85,7 @@ try {
     })
     console.log(artifactFiles)
 
-    const artifact = new File([""], "artifact.zip", { type: "application/zip" });
-    artifact.write("artifact.zip", artifactFiles);
-    core.setOutput("deploy-artifact", artifact)
+    core.setOutput("deploy-artifact", {name: 'hola', url: 'https://www.google.com'})
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
