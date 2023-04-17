@@ -85,7 +85,7 @@ try {
     })
     console.log(artifactFiles)
 
-    const artifact = new File()
+    const artifact = new File([""], "artifact.zip", { type: "application/zip" });
     artifact.write("artifact.zip", artifactFiles);
     core.setOutput("deploy-artifact", artifact)
 
