@@ -5,10 +5,10 @@ import JSZip from 'jszip';
 function sleep(time) {
     return new Promise(r => setTimeout(r, time));
 }
-async function getJsonFromZip(zipFiles){
+function getJsonFromZip(zipFiles){
     const zip = new JSZip();
     const jsonArtifact = [];
-    return zip.loadAsync(zipFiles)
+    return new Promise( (zipFiles) => zip.loadAsync(zipFiles)
         .then(zip => {
             // const jsonFile = Object.values(zip.files)[0];
             console.log('jsonFile.name');
@@ -25,7 +25,7 @@ async function getJsonFromZip(zipFiles){
         })
         .catch(error => {
             core.setFailed(error.message)
-        });
+        }));
 }
 
 try {
