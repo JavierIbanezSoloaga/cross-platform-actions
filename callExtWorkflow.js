@@ -5,7 +5,7 @@ import JSZip from 'jszip';
 function sleep(time) {
     return new Promise(r => setTimeout(r, time));
 }
-function getJsonFromZip(zipFiles){
+function getJsonFromZip(zipFiles) {
     const zip = new JSZip();
     const jsonArtifact = [];
     return zip.loadAsync(zipFiles)
@@ -79,33 +79,48 @@ try {
                 // If the target job is found go outside the loop 
                 if (targetJob !== undefined) break
             }
-            console.log('targetJob: ',targetJob)
+            console.log('targetJob: ', targetJob)
         }
         if (targetJob === undefined || targetJob === null) {
             await sleep(SLEEP_DELAY)
         }
     }
 
-    let artifacts = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts', {
-        owner: owner,
-        repo: whoToCall,
-        run_id: targetJob['run_id']
-    })
+    let targetArtifact = undefined
+    while (targetArtifact === undefined) {
+        let artifacts = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts', {
+            owner: owner,
+            repo: whoToCall,
+            run_id: targetJob['run_id']
+        })
+        console.log('artifacts: ', artifacts)
 
-    let targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
-    console.log('targetArtifact: ', targetArtifact)
-    let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
-        owner: owner,
-        repo: whoToCall,
-        artifact_id: targetArtifact['id']
-    })
-    console.log('artifactFiles: ', artifactFiles);
-    getJsonFromZip(artifactFiles.data)
-    .then(output => {
-        console.log('outside: '+ output);
-        core.setOutput("deploy-artifact", output);
-        control = output;
-    });
+        targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
+
+        console.log('targetArtifact: ', targetArtifact)
+        if (targetArtifact !== undefined) {
+            let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
+                owner: owner,
+                repo: whoToCall,
+                artifact_id: targetArtifact['id']
+            })
+            console.log('artifactFiles: ', artifactFiles);
+            getJsonFromZip(artifactFiles.data)
+                .then(output => {
+                    console.log('outside: ' + output);
+                    core.setOutput("deploy-artifact", output);
+                    control = output;
+                });
+        }
+        if (targetArtifact === undefined) {
+            await sleep(SLEEP_DELAY)
+        }
+    }
+
+
+
+
+
 
 } catch (error) {
     core.setFailed(error.message);
