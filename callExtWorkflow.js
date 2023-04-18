@@ -15,7 +15,8 @@ function getJsonFromZip(zipFiles){
                     jsonArtifact.push(content);
                 })
             })
-            return Promise.all(jsonArtifact);
+        }).finally(() => {
+            return jsonArtifact;
         })
         .catch(error => {
             core.setFailed(error.message)
@@ -104,7 +105,7 @@ try {
     let control = []
     getJsonFromZip(artifactFiles.data)
     .then(output => {
-        console.log('outside: '+output);
+        console.log('outside: '+ output);
         core.setOutput("deploy-artifact", output);
         control = output;
     });
