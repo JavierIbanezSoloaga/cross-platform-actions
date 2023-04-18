@@ -5,6 +5,25 @@ import JSZip from 'jszip';
 function sleep(time) {
     return new Promise(r => setTimeout(r, time));
 }
+function getJsonFromZip(zipFiles){
+    const zip = new JSZip();
+    const jsonArtifact = [];
+    zip.loadAsync(zipFiles)
+        .then(zip => {
+            // const jsonFile = Object.values(zip.files)[0];
+            Object.values(zip.files).forEach(file => {
+                file.async('string').then(content => {
+                    jsonArtifact.push(content);
+                });
+            });
+
+            return jsonArtifact;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        return new Promise(() => jsonArtifact);
+}
 
 try {
     const SLEEP_DELAY = 3000
@@ -70,14 +89,13 @@ try {
             await sleep(SLEEP_DELAY)
         }
     }
-    console.log(targetJob)
 
     let artifacts = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts', {
         owner: owner,
         repo: whoToCall,
         run_id: targetJob['run_id']
     })
-    console.log(artifacts.data.artifacts)
+
     let targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
     console.log(targetArtifact)
     let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
@@ -85,27 +103,11 @@ try {
         repo: whoToCall,
         artifact_id: targetArtifact['id']
     })
+    const output = await getJsonFromZip(artifactFiles);
+    console.log(output);
+    core.setOutput("deploy-artifact", output);
 
-    // Crea una instancia de JSZip
-    const zip = new JSZip();
-    // Carga el archivo ZIP desde una variable
-    zip.loadAsync(artifactFiles.data)
-        .then(zip => {
-            // Obtiene el primer archivo en la estructura del ZIP
-            const jsonFile = Object.values(zip.files)[0];
-            // Obtiene el contenido del archivo JSON
-            return jsonFile.async('string');
-        })
-        .then(json => {
-            // Procesa el archivo JSON
-            console.log(json);
-            core.setOutput("deploy-artifact", { name: 'artifact' , json: json });
-        })
-        .catch(error => {
-            console.error(error);
-        });
 
-    // TODO: wait for the workflow to end and recover the output
 } catch (error) {
     core.setFailed(error.message);
 
