@@ -16,6 +16,7 @@ function getJsonFromZip(zipFiles){
                 })
             })
         }).finally(() => {
+            console.log('inside: '+ jsonArtifact);
             return jsonArtifact;
         })
         .catch(error => {
