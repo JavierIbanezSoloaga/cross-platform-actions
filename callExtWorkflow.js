@@ -10,12 +10,8 @@ function getJsonFromZip(zipFiles){
     const jsonArtifact = [];
     return zip.loadAsync(zipFiles)
         .then(zip => {
-            // const jsonFile = Object.values(zip.files)[0];
-            console.log('jsonFile.name');
             Object.values(zip.files).forEach(file => {
-                console.log(file.name);
                 file.async('string').then(content => {
-                    console.log(content);
                     jsonArtifact.push(content);
                 })
             })
@@ -105,11 +101,10 @@ try {
         artifact_id: targetArtifact['id']
     })
     console.log('artifactFiles: ', artifactFiles);
-    getJsonFromZip(artifactFiles.data).then(output => {
+    await getJsonFromZip(artifactFiles.data).then(output => {
         console.log('outside: '+output);
         core.setOutput("deploy-artifact", output);
     });
-    console.log("holi");
 
 } catch (error) {
     core.setFailed(error.message);
