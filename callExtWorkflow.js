@@ -15,9 +15,7 @@ function getJsonFromZip(zipFiles){
                     jsonArtifact.push(content);
                 })
             })
-        }).finally(() => {
-            console.log('inside: '+ jsonArtifact);
-            return jsonArtifact;
+            return Promise.all(jsonArtifact);
         })
         .catch(error => {
             core.setFailed(error.message)
