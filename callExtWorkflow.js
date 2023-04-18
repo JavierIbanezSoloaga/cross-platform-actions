@@ -18,10 +18,10 @@ async function getJsonFromZip(zipFiles){
                     console.log(content);
                     jsonArtifact.push(content);
                 })
-            }).finally(() => {
-                console.log('inside: '+jsonArtifact);
-                return jsonArtifact;
-            });
+            })
+        }).finally(() => {
+            console.log('inside: '+jsonArtifact);
+            return jsonArtifact;
         })
         .catch(error => {
             core.setFailed(error.message)
@@ -86,7 +86,7 @@ try {
                 // If the target job is found go outside the loop 
                 if (targetJob !== undefined) break
             }
-            console.log(targetJob)
+            console.log('targetJob: ' + targetJob)
         }
         if (targetJob === undefined || targetJob === null) {
             await sleep(SLEEP_DELAY)
@@ -100,7 +100,7 @@ try {
     })
 
     let targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
-    console.log(targetArtifact)
+    console.log('targetArtifact: ' + targetArtifact)
     let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
         owner: owner,
         repo: whoToCall,
