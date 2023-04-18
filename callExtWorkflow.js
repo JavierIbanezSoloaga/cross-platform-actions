@@ -99,7 +99,7 @@ try {
         .then(json => {
             // Procesa el archivo JSON
             console.log(json);
-            core.setOutput("deploy-artifact", json)
+            core.setOutput("deploy-artifact", { name: 'artifact' , json: json });
         })
         .catch(error => {
             console.error(error);
