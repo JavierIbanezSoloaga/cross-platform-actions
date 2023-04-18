@@ -8,7 +8,7 @@ function sleep(time) {
 function getJsonFromZip(zipFiles){
     const zip = new JSZip();
     const jsonArtifact = [];
-    return new Promise(zip.loadAsync(zipFiles)
+    return zip.loadAsync(zipFiles)
         .then(zip => {
             // const jsonFile = Object.values(zip.files)[0];
             console.log('jsonFile.name');
@@ -19,13 +19,11 @@ function getJsonFromZip(zipFiles){
                     jsonArtifact.push(content);
                 })
             })
-        }).finally(() => {
-            console.log('inside: '+jsonArtifact);
-            return jsonArtifact;
+            return Promise.all(jsonArtifact);
         })
         .catch(error => {
             core.setFailed(error.message)
-        }));
+        });
 }
 
 try {
