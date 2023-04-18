@@ -8,7 +8,7 @@ function sleep(time) {
 function getJsonFromZip(zipFiles){
     const zip = new JSZip();
     const jsonArtifact = [];
-    return new Promise( (zipFiles) => zip.loadAsync(zipFiles)
+    return new Promise( () => zip.loadAsync(zipFiles)
         .then(zip => {
             // const jsonFile = Object.values(zip.files)[0];
             console.log('jsonFile.name');
@@ -100,7 +100,7 @@ try {
     })
 
     let targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
-    console.log('targetArtifact: ' + targetArtifact)
+    console.log('targetArtifact: ', targetArtifact)
     let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
         owner: owner,
         repo: whoToCall,
