@@ -11,18 +11,20 @@ async function getJsonFromZip(zipFiles){
     zip.loadAsync(zipFiles)
         .then(zip => {
             // const jsonFile = Object.values(zip.files)[0];
+            console.log('jsonFile.name');
             Object.values(zip.files).forEach(file => {
+                console.log(file.name);
                 file.async('string').then(content => {
+                    console.log(content);
                     jsonArtifact.push(content);
+                }).finally(() => {
+                    console.log('inside: '+jsonArtifact);
                 });
-            });
-
-            return jsonArtifact;
+            })
         })
         .catch(error => {
             core.setFailed(error.message)
         });
-        return jsonArtifact;
 }
 
 try {
