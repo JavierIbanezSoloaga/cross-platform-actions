@@ -101,7 +101,7 @@ try {
         artifact_id: targetArtifact['id']
     })
     console.log('artifactFiles: ', artifactFiles);
-    const control = []
+    let control = []
     await getJsonFromZip(artifactFiles.data)
     .then(output => {
         console.log('outside: '+output);
