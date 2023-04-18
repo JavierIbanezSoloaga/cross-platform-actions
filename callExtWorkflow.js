@@ -89,7 +89,7 @@ try {
     // Crea una instancia de JSZip
     const zip = new JSZip();
     // Carga el archivo ZIP desde una variable
-    zip.loadAsync(targetArtifact.data)
+    zip.loadAsync(artifactFiles.data)
         .then(zip => {
             // Obtiene el primer archivo en la estructura del ZIP
             const jsonFile = Object.values(zip.files)[0];
