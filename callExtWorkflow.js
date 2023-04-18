@@ -102,7 +102,7 @@ try {
     })
     console.log('artifactFiles: ', artifactFiles);
     let control = []
-    await getJsonFromZip(artifactFiles.data)
+    getJsonFromZip(artifactFiles.data)
     .then(output => {
         console.log('outside: '+output);
         core.setOutput("deploy-artifact", output);
