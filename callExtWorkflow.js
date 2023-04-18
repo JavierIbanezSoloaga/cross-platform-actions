@@ -106,9 +106,12 @@ try {
         artifact_id: targetArtifact['id']
     })
     try{
-    const output = await getJsonFromZip(artifactFiles.data);
-    console.log(output);
-    core.setOutput("deploy-artifact", output);
+    getJsonFromZip(artifactFiles.data).then(output => {
+        console.log('outside: '+output);
+        core.setOutput("deploy-artifact", output);
+    });
+    
+
     }catch(error){
         core.setFailed(error.message);
     }
