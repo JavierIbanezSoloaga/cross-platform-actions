@@ -101,13 +101,18 @@ try {
         artifact_id: targetArtifact['id']
     })
     console.log('artifactFiles: ', artifactFiles);
-    const output = await getJsonFromZip(artifactFiles.data)
-    // .then(output => {
-    //     console.log('outside: '+output);
-    //     core.setOutput("deploy-artifact", output);
-    // });
-    console.log('outside: '+output);
-    core.setOutput("deploy-artifact", output);
+    const control = []
+    await getJsonFromZip(artifactFiles.data)
+    .then(output => {
+        console.log('outside: '+output);
+        core.setOutput("deploy-artifact", output);
+        control = output;
+    });
+
+    if(control === []){
+        console.log('control = ', control);
+        await sleep(3000);
+    }
 
 } catch (error) {
     core.setFailed(error.message);
