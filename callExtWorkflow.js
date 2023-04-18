@@ -103,7 +103,7 @@ try {
         repo: whoToCall,
         artifact_id: targetArtifact['id']
     })
-    const output = await getJsonFromZip(artifactFiles);
+    const output = await getJsonFromZip(artifactFiles.data);
     console.log(output);
     core.setOutput("deploy-artifact", output);
 
