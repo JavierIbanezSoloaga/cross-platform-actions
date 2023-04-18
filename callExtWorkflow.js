@@ -19,13 +19,13 @@ async function getJsonFromZip(zipFiles){
                     jsonArtifact.push(content);
                 }).finally(() => {
                     console.log('inside: '+jsonArtifact);
+                    return jsonArtifact;
                 });
             })
         })
         .catch(error => {
             core.setFailed(error.message)
         });
-    return jsonArtifact;
 }
 
 try {
