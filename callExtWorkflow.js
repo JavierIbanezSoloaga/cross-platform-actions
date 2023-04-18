@@ -83,7 +83,10 @@ try {
         repo: whoToCall,
         artifact_id: targetArtifact['id']
     })
-    console.log(artifactFiles)
+    
+    const json = Buffer.from(artifactFiles.data).toJSON();
+    console.log(json)
+
 
     core.setOutput("deploy-artifact", {name: `${whoToCall}-artifact`, zip: artifactFiles.data})
 
