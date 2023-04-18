@@ -99,13 +99,11 @@ try {
         .then(json => {
             // Procesa el archivo JSON
             console.log(json);
+            core.setOutput("deploy-artifact", json)
         })
         .catch(error => {
             console.error(error);
         });
-
-
-    core.setOutput("deploy-artifact", { name: `${whoToCall}-artifact`, zip: artifactFiles.data })
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
