@@ -25,6 +25,7 @@ async function getJsonFromZip(zipFiles){
         .catch(error => {
             core.setFailed(error.message)
         });
+    return jsonArtifact;
 }
 
 try {
