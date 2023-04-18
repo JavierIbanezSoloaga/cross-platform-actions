@@ -8,7 +8,7 @@ function sleep(time) {
 function getJsonFromZip(zipFiles){
     const zip = new JSZip();
     const jsonArtifact = [];
-    return new Promise( () => zip.loadAsync(zipFiles)
+    return new Promise(zip.loadAsync(zipFiles)
         .then(zip => {
             // const jsonFile = Object.values(zip.files)[0];
             console.log('jsonFile.name');
@@ -106,16 +106,12 @@ try {
         repo: whoToCall,
         artifact_id: targetArtifact['id']
     })
-    try{
+    console.log('artifactFiles: ', artifactFiles);
     getJsonFromZip(artifactFiles.data).then(output => {
         console.log('outside: '+output);
         core.setOutput("deploy-artifact", output);
     });
-    
-
-    }catch(error){
-        core.setFailed(error.message);
-    }
+    console.log("holi");
 
 } catch (error) {
     core.setFailed(error.message);
