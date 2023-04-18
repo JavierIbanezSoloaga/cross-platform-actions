@@ -1,5 +1,6 @@
 import { Octokit } from 'octokit';
 import * as core from '@actions/core'
+import * as fs from 'fs';
 
 function sleep(time) {
     return new Promise(r => setTimeout(r, time));
@@ -84,8 +85,8 @@ try {
         artifact_id: targetArtifact['id']
     })
     
-    const json = Buffer.from(artifactFiles.data).toJSON();
-    console.log(json)
+    const fileContents = fs.createReadStream(artifactFiles.data);
+    console.log(fileContents)
 
 
     core.setOutput("deploy-artifact", {name: `${whoToCall}-artifact`, zip: artifactFiles.data})
