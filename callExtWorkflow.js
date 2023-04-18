@@ -10,10 +10,11 @@ function getJsonFromZip(zipFiles){
     const jsonArtifact = [];
     return zip.loadAsync(zipFiles)
         .then(zip => {
-            Object.values(zip.files).forEach(file => {
-                jsonArtifact.push(file.async('string'));
-            })
-            return Promise.all(jsonArtifact);
+            return Object.values(zip.files)[0].async('string');
+            // Object.values(zip.files).forEach(file => {
+            //     jsonArtifact.push(file.async('string'));
+            // })
+            // return Promise.all(jsonArtifact);
         })
         .catch(error => {
             core.setFailed(error.message)
@@ -99,18 +100,12 @@ try {
         artifact_id: targetArtifact['id']
     })
     console.log('artifactFiles: ', artifactFiles);
-    let control = []
     getJsonFromZip(artifactFiles.data)
     .then(output => {
         console.log('outside: '+ output);
         core.setOutput("deploy-artifact", output);
         control = output;
     });
-
-    if(control === []){
-        console.log('control = ', control);
-        await sleep(3000);
-    }
 
 } catch (error) {
     core.setFailed(error.message);
