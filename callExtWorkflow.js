@@ -11,9 +11,7 @@ function getJsonFromZip(zipFiles){
     return zip.loadAsync(zipFiles)
         .then(zip => {
             Object.values(zip.files).forEach(file => {
-                file.async('string').then(content => {
-                    jsonArtifact.push(content);
-                })
+                jsonArtifact.push(file.async('string'));
             })
             return Promise.all(jsonArtifact);
         })
