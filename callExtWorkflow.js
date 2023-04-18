@@ -1,6 +1,6 @@
 import { Octokit } from 'octokit';
 import * as core from '@actions/core'
-import * as fs from 'fs';
+import JSZip from 'jszip';
 
 function sleep(time) {
     return new Promise(r => setTimeout(r, time));
@@ -27,7 +27,7 @@ try {
     const octokit = new Octokit({
         auth: token
     })
-    
+
     await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
         owner: owner,
         repo: whoToCall,
@@ -85,12 +85,27 @@ try {
         repo: whoToCall,
         artifact_id: targetArtifact['id']
     })
-    
-    const fileContents = fs.createReadStream(artifactFiles.data);
-    console.log(fileContents)
+
+    // Crea una instancia de JSZip
+    const zip = new JSZip();
+    // Carga el archivo ZIP desde una variable
+    zip.loadAsync(targetArtifact.data)
+        .then(zip => {
+            // Obtiene el primer archivo en la estructura del ZIP
+            const jsonFile = Object.values(zip.files)[0];
+            // Obtiene el contenido del archivo JSON
+            return jsonFile.async('string');
+        })
+        .then(json => {
+            // Procesa el archivo JSON
+            console.log(json);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
 
-    core.setOutput("deploy-artifact", {name: `${whoToCall}-artifact`, zip: artifactFiles.data})
+    core.setOutput("deploy-artifact", { name: `${whoToCall}-artifact`, zip: artifactFiles.data })
 
     // TODO: wait for the workflow to end and recover the output
 } catch (error) {
