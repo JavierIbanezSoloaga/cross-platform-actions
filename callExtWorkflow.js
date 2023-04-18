@@ -20,7 +20,7 @@ function getJsonFromZip(zipFiles){
             return jsonArtifact;
         })
         .catch(error => {
-            console.error(error);
+            core.setFailed(error.message)
         });
         return new Promise(() => jsonArtifact);
 }
@@ -103,10 +103,13 @@ try {
         repo: whoToCall,
         artifact_id: targetArtifact['id']
     })
+    try{
     const output = await getJsonFromZip(artifactFiles.data);
     console.log(output);
     core.setOutput("deploy-artifact", output);
-
+    }catch(error){
+        core.setFailed(error.message);
+    }
 
 } catch (error) {
     core.setFailed(error.message);
