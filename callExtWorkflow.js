@@ -109,7 +109,6 @@ try {
                 .then(output => {
                     console.log('outside: ' + output);
                     core.setOutput("deploy-artifact", output);
-                    control = output;
                 });
         }
         if (targetArtifact === undefined) {
