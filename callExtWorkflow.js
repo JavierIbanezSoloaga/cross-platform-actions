@@ -69,6 +69,7 @@ try {
             }
         })
         if(targetRun) targetRun = response.data.workflow_runs.find(run => run.id === targetRun.id);
+        console.log('targetRun: ', targetRun);
         let runs = targetRun ? [targetRun] : response.data.workflow_runs
         if (runs.length > 0) {
 
@@ -82,10 +83,7 @@ try {
 
                 // If the target job is found and the run is completed go outside the loop 
                 if (run.status === 'completed' && targetJob) break;
-                if (targetJob) {
-                    targetRun = run;
-                    console.log(targetRun)
-                }
+                if (targetJob && !targetRun) targetRun = run;
             }
             console.log('targetJob: ', targetJob)
         }
