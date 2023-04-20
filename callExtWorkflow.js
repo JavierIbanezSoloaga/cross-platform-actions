@@ -104,7 +104,6 @@ try {
     .then(output => {
         console.log('outside: '+ output);
         core.setOutput("deploy-artifact", output);
-        control = output;
     });
 
 } catch (error) {
