@@ -86,33 +86,37 @@ try {
         }
     }
 
-    let targetArtifact = undefined
-    while (targetArtifact === undefined) {
-        let artifacts = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts', {
-            owner: owner,
-            repo: whoToCall,
-            run_id: targetJob['run_id']
-        })
-        console.log('artifacts: ', artifacts)
-
-        targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
-
-        console.log('targetArtifact: ', targetArtifact)
-        if (targetArtifact !== undefined) {
-            let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
+    if (targetJob.conclusion !== "success") {
+        core.setFailed(`Job ${targetJob.name} failed`);
+    } else {
+        let targetArtifact = undefined
+        while (targetArtifact === undefined) {
+            let artifacts = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts', {
                 owner: owner,
                 repo: whoToCall,
-                artifact_id: targetArtifact['id']
+                run_id: targetJob['run_id']
             })
-            console.log('artifactFiles: ', artifactFiles);
-            getJsonFromZip(artifactFiles.data)
-                .then(output => {
-                    console.log('outside: ' + output);
-                    core.setOutput("deploy-artifact", output);
-                });
-        }
-        if (targetArtifact === undefined) {
-            await sleep(SLEEP_DELAY)
+            console.log('artifacts: ', artifacts)
+
+            targetArtifact = artifacts.data.artifacts.find(artifact => artifact.name === "example-artifact")
+
+            console.log('targetArtifact: ', targetArtifact)
+            if (targetArtifact !== undefined) {
+                let artifactFiles = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip', {
+                    owner: owner,
+                    repo: whoToCall,
+                    artifact_id: targetArtifact['id']
+                })
+                console.log('artifactFiles: ', artifactFiles);
+                getJsonFromZip(artifactFiles.data)
+                    .then(output => {
+                        console.log('outside: ' + output);
+                        core.setOutput("deploy-artifact", output);
+                    });
+            }
+            if (targetArtifact === undefined) {
+                await sleep(SLEEP_DELAY)
+            }
         }
     }
 } catch (error) {
