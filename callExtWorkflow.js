@@ -57,7 +57,7 @@ try {
     })
 
     while (targetJob === undefined || targetJob === null) {
-        let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
+        let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created>={run_date_filter}', {
             owner: owner,
             repo: whoToCall,
             run_date_filter: run_date_filter,
@@ -115,12 +115,6 @@ try {
             await sleep(SLEEP_DELAY)
         }
     }
-
-
-
-
-
-
 } catch (error) {
     core.setFailed(error.message);
 
