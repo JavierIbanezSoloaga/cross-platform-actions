@@ -56,17 +56,23 @@ try {
         }
     })
 
-    while (targetJob === undefined || targetJob === null) {
-        let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
-            owner: owner,
-            repo: whoToCall,
-            run_date_filter: run_date_filter,
-            headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-            }
+    let targetRun = undefined
+    let response = undefined
 
-        })
-        let runs = response.data.workflow_runs.filter(run => run.status === "completed")
+    while (targetRun.status !== 'completed') {
+
+        if (!targetRun) {
+            response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
+                owner: owner,
+                repo: whoToCall,
+                run_date_filter: run_date_filter,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            })
+        }
+        
+        let runs = targetRun ? [targetRun] : response.data.workflow_runs
         if (runs.length > 0) {
 
             for (let run of runs) {
@@ -76,12 +82,17 @@ try {
                     id: run['id']
                 })
                 targetJob = jobs.data.jobs.find(job => job.steps.find(step => step.name === id))
-                // If the target job is found go outside the loop 
-                if (targetJob !== undefined) break
+
+                // If the target job is found and the run is completed go outside the loop 
+                if (run.status === 'completed' && targetJob) break;
+                if (targetJob) {
+                    targetRun = run;
+                    console.log(targetRun)
+                }
             }
             console.log('targetJob: ', targetJob)
         }
-        if (targetJob === undefined || targetJob === null) {
+        if (targetRun.status !== 'completed') {
             await sleep(SLEEP_DELAY)
         }
     }
