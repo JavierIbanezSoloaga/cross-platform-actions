@@ -57,21 +57,18 @@ try {
     })
 
     let targetRun = undefined
-    let response = undefined
 
     while (!targetRun || targetRun.status !== 'completed') {
 
-        if (!targetRun) {
-            response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
-                owner: owner,
-                repo: whoToCall,
-                run_date_filter: run_date_filter,
-                headers: {
-                    'X-GitHub-Api-Version': '2022-11-28'
-                }
-            })
-        }
-        
+        let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
+            owner: owner,
+            repo: whoToCall,
+            run_date_filter: run_date_filter,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+        if(targetRun) targetRun = response.data.workflow_runs.find(run => run.id === targetRun.id);
         let runs = targetRun ? [targetRun] : response.data.workflow_runs
         if (runs.length > 0) {
 
