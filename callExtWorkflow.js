@@ -59,7 +59,7 @@ try {
     let targetRun = undefined
     let response = undefined
 
-    while (targetRun && targetRun.status !== 'completed') {
+    while (!targetRun || targetRun.status !== 'completed') {
 
         if (!targetRun) {
             response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created={run_date_filter}', {
