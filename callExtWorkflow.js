@@ -1,6 +1,8 @@
 import { Octokit } from 'octokit';
 import * as core from '@actions/core'
 import JSZip from 'jszip';
+import { v4 as uuidv4 } from "uuid";
+
 
 function sleep(time) {
     return new Promise(r => setTimeout(r, time));
@@ -27,7 +29,7 @@ try {
     const owner = 'JavierIbanezSoloaga'
     let targetJob = null
     // TODO: Generate a random ID
-    const id = '1234'
+    const id = uuidv4();
 
     // `who-to-call` input defined in action metadata file
     const whoToCall = core.getInput('who-to-call', { required: true })
@@ -36,8 +38,10 @@ try {
     const token = core.getInput('token')
 
     // Format YYYY-MM-DDTHH:MM
-    const run_date_filter = new Date().toJSON().slice(0, 16)
-    console.log(run_date_filter)
+    const run_date_filter_raw = new Date()
+    const run_date_filter = run_date_filter_raw.toJSON().slice(0, 13);
+    const run_date_filter_aux = (run_date_filter_raw.setHours(run_date_filter_raw.getHours() + 1)).toJSON().slice(0, 13);
+    console.log(run_date_filter, run_date_filter_aux)
 
     const octokit = new Octokit({
         auth: token
