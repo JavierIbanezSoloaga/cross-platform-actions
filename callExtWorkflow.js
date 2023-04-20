@@ -40,7 +40,7 @@ try {
     // Format YYYY-MM-DDTHH:MM
     const run_date_filter_raw = new Date()
     const run_date_filter = run_date_filter_raw.toJSON().slice(0, 13);
-    run_date_filter_raw.setHours(run_date_filter_raw.getHours() + 1)
+    run_date_filter_raw.setHours(run_date_filter_raw.getHours() - 10)
     const run_date_filter_aux = run_date_filter_raw.toJSON().slice(0, 13);
     console.log(run_date_filter, run_date_filter_aux)
 
