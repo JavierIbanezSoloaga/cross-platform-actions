@@ -42,6 +42,20 @@ try {
     const octokit = new Octokit({
         auth: token
     })
+    core.info("Dispatching workflow " + workflow_id + " of " + whoToCall)
+    core.debug("Dispatching workflow with this options " + JSON.stringify({
+        owner: owner,
+        repo: whoToCall,
+        workflow_id: workflow_id,
+        ref: 'main',
+
+        inputs: {
+            id: id
+        },
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    }, null, 2))
 
     await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
         owner: owner,
@@ -55,7 +69,7 @@ try {
             'X-GitHub-Api-Version': '2022-11-28'
         }
     })
-
+    core.warning("Start asking for the job");
     while (targetJob === undefined || targetJob === null) {
         let response = await octokit.request('GET /repos/{owner}/{repo}/actions/runs?created>={run_date_filter}', {
             owner: owner,
@@ -83,6 +97,7 @@ try {
         }
         if (targetJob === undefined || targetJob === null) {
             await sleep(SLEEP_DELAY)
+            core.warning("Waiting for the job to finish");
         }
     }
 
