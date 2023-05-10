@@ -57,6 +57,16 @@ try {
         }
     }, null, 2))
 
+    await octokit.request('GET /repos/{owner}/{repo}/actions/workflows', {
+        owner: owner,
+        repo: whoToCall,
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    }).then(response => {
+        console.log('response: ', response);
+    })
+
     await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
         owner: owner,
         repo: whoToCall,
