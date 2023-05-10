@@ -23,7 +23,7 @@ function getJsonFromZip(zipFiles) {
 
 try {
     const SLEEP_DELAY = 3000
-    const workflow_id = 'printID.yml'
+    let workflow_id = 'printID.yml'
     const owner = 'JavierIbanezSoloaga'
     let targetJob = null
     // TODO: Generate a random ID
@@ -57,16 +57,20 @@ try {
         }
     }, null, 2))
 
-    await octokit.request('GET /repos/{owner}/{repo}/actions/workflows', {
+    let workflows = await octokit.request('GET /repos/{owner}/{repo}/actions/workflows', {
         owner: owner,
         repo: whoToCall,
         headers: {
             'X-GitHub-Api-Version': '2022-11-28'
         }
-    }).then(response => {
-        console.log('response: ', response);
     })
 
+    console.log(workflows.data.workflows)
+
+    workflow_id = workflows.data.workflows.find(workflow => workflow.name === 'ID Example')['id']
+
+    console.log('workflow_id: ', workflow_id) 
+    
     await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
         owner: owner,
         repo: whoToCall,
